@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercices bloc 3 – Évaluer les actions de fidélisation</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+/* ── RESET & BASE ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #f6f7fb;
+  --surface:   #ffffff;
+  --card:      #ffffff;
+  --border:    #dfe2ec;
+  --border-hi: #b9bfd3;
+  --text:      #1f2333;
+  --text-dim:  #5f6580;
+  --accent:    #c98a00;
+  --green:     #1f8a46;
+  --red:       #c93636;
+  --blue:      #2f6fb5;
+  --purple:    #7246b0;
+  --font-head: 'Syne', sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --radius:    10px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* ── HEADER ──────────────────────────────────────────────── */
+.site-header {
+  background: linear-gradient(135deg, #ffffff 0%, #eef1f8 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 48px 24px 36px;
+  text-align: center;
+}
+.site-header .kicker {
+  display: inline-block;
+  background: var(--accent);
+  color: #ffffff;
+  font-family: var(--font-head);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  padding: 3px 12px;
+  border-radius: 3px;
+  margin-bottom: 18px;
+}
+.site-header h1 {
+  font-family: var(--font-head);
+  font-size: clamp(22px, 5vw, 38px);
+  font-weight: 800;
+  color: #141827;
+  margin-bottom: 8px;
+  line-height: 1.15;
+}
+.site-header .sub {
+  color: var(--text-dim);
+  font-size: 14px;
+  font-weight: 300;
+  max-width: 560px;
+  margin: 0 auto 24px;
+}
+
+/* ── NAV ANCRES ──────────────────────────────────────────── */
+.nav-anchors {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.nav-anchors a {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px 16px;
+  text-decoration: none;
+  transition: border-color .15s, color .15s;
+}
+.nav-anchors a:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ── CONTENEUR PRINCIPAL ─────────────────────────────────── */
+main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+}
+
+/* ── TITRE DE BLOC ───────────────────────────────────────── */
+.bloc-titre {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 52px 0 6px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.bloc-titre:first-child { margin-top: 0; }
+.bloc-titre .icone { font-size: 26px; flex-shrink: 0; }
+.bloc-titre h2 {
+  font-family: var(--font-head);
+  font-size: 20px;
+  font-weight: 800;
+  color: #141827;
+}
+
+/* ── MÉMO FORMULE ────────────────────────────────────────── */
+.memo {
+  background: #eef8f1;
+  border: 1px solid #cde8d6;
+  border-left: 4px solid var(--green);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  font-size: 13.5px;
+  line-height: 1.75;
+}
+.memo .memo-titre {
+  font-family: var(--font-head);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 8px;
+}
+.memo code {
+  display: block;
+  background: #ffffff;
+  border: 1px solid #d7ecdf;
+  border-radius: 5px;
+  padding: 8px 14px;
+  color: #17643a;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  margin: 4px 0;
+}
+.memo .note { color: var(--text-dim); font-size: 12.5px; margin-top: 6px; }
+
+/* ── CARTE EXERCICE ──────────────────────────────────────── */
+.exo-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 14px;
+  overflow: hidden;
+  transition: border-color .15s;
+  box-shadow: 0 1px 2px rgba(20,24,39,.04);
+}
+.exo-card:hover { border-color: var(--border-hi); }
+
+.exo-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+}
+.exo-header::-webkit-details-marker { display: none; }
+
+.exo-num {
+  font-family: var(--font-head);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-dim);
+  flex-shrink: 0;
+  min-width: 40px;
+}
+.badge {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 9px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.badge-1 { background: #e7f6ec; color: var(--green); border: 1px solid #bfe3cb; }
+.badge-2 { background: #fdf4dc; color: #9a6a00; border: 1px solid #f0d78f; }
+.badge-3 { background: #fbe9e9; color: var(--red); border: 1px solid #f0c2c2; }
+.badge-exam { background: #f1eafb; color: var(--purple); border: 1px solid #d8c7f0; }
+
+.exo-titre-txt { font-size: 14px; font-weight: 500; color: var(--text); flex: 1; }
+.chevron { color: var(--text-dim); font-size: 13px; flex-shrink: 0; transition: transform .2s; }
+details[open] .chevron { transform: rotate(180deg); }
+
+/* ── CORPS DE L'EXERCICE ─────────────────────────────────── */
+.exo-body { padding: 0 18px 20px; border-top: 1px solid var(--border); }
+
+.contexte {
+  background: #eef3fb;
+  border-left: 3px solid var(--blue);
+  border-radius: 0 6px 6px 0;
+  padding: 14px 18px;
+  margin: 16px 0;
+  font-size: 14px;
+  line-height: 1.75;
+}
+.contexte strong { color: #141827; }
+
+.tableau-donnees {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 12px 0;
+}
+.tableau-donnees th {
+  background: #eef1f8;
+  color: var(--text-dim);
+  font-family: var(--font-head);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.tableau-donnees td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--text); }
+.tableau-donnees tr:last-child td { border-bottom: none; }
+.tableau-donnees td.num { font-weight: 600; color: #141827; }
+.tableau-donnees tr.total-row td {
+  background: #eef1f8;
+  font-family: var(--font-head);
+  font-weight: 700;
+  color: #9a6a00;
+}
+
+.questions { margin: 18px 0 0; }
+.question { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-start; }
+.question .q-num {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  background: var(--accent);
+  color: #ffffff;
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 11px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+.question p { font-size: 14px; margin: 0; }
+
+/* ── ORDRE DE GRANDEUR ───────────────────────────────────── */
+.ordre-grandeur {
+  background: #fff8e6;
+  border: 1px solid #f0dca3;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 12.5px;
+  color: #7a5a00;
+  margin: 12px 0 0;
+}
+.ordre-grandeur::before { content: "💡 "; }
+
+/* ── BOUTON CORRECTION ───────────────────────────────────── */
+.btn-corrige {
+  background: none;
+  border: 1px solid var(--border-hi);
+  border-radius: 6px;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 16px;
+  margin-top: 18px;
+  transition: all .15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-corrige:hover { border-color: var(--green); color: var(--green); }
+
+/* ── CORRECTION ──────────────────────────────────────────── */
+.correction {
+  display: none;
+  background: #f1f9f4;
+  border: 1px solid #cde8d6;
+  border-radius: 6px;
+  padding: 16px 18px;
+  margin-top: 14px;
+  font-size: 13.5px;
+  line-height: 1.8;
+}
+.correction.visible { display: block; }
+.correction .corr-etape { margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #d7ecdf; }
+.correction .corr-etape:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+.correction .c-num {
+  display: inline-block;
+  background: var(--green);
+  color: #ffffff;
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 10px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 18px;
+  margin-right: 6px;
+}
+.correction code {
+  display: block;
+  background: #ffffff;
+  border: 1px solid #d7ecdf;
+  border-radius: 4px;
+  padding: 6px 12px;
+  color: #17643a;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  margin: 5px 0;
+}
+.correction .res { font-family: var(--font-head); font-weight: 700; color: #141827; }
+.correction .conclu { margin-top: 8px; font-size: 13px; color: #3d6b4d; font-style: italic; }
+.correction .tableau-corr { width: 100%; border-collapse: collapse; font-size: 12.5px; margin: 8px 0; }
+.correction .tableau-corr th {
+  background: #e3f2e8;
+  color: var(--text-dim);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  text-align: left;
+}
+.correction .tableau-corr td { padding: 6px 10px; border-bottom: 1px solid #d7ecdf; color: #2c3a31; }
+.correction .tableau-corr td.val { font-weight: 700; color: var(--green); }
+.correction .tableau-corr tr.t-total td { background: #e3f2e8; font-weight: 700; color: #9a6a00; }
+
+/* ── SÉPARATEUR ──────────────────────────────────────────── */
+hr.section-sep { border: none; border-top: 1px solid var(--border); margin: 54px 0 0; }
+
+/* ── FOOTER ──────────────────────────────────────────────── */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 28px 20px;
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@media (max-width: 520px) {
+  .exo-titre-txt { font-size: 13px; }
+  .contexte { font-size: 13px; }
+  .tableau-donnees { font-size: 12px; }
+  .tableau-donnees th, .tableau-donnees td { padding: 6px 7px; }
+  .exo-body { overflow-x: auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══════════════════════════════════════════════ -->
+<header class="site-header">
+  <div class="kicker">📊 Exercices bloc 3 – Bac pro MCV</div>
+  <h1>Évaluer les actions<br>de fidélisation</h1>
+  <p class="sub">15 exercices progressifs – enrichir le SIC, mesurer l'efficacité d'une action, analyser et proposer des améliorations</p>
+  <nav class="nav-anchors">
+    <a href="#sic">🗂 Enrichir et exploiter le SIC (4 ex.)</a>
+    <a href="#mesure">📈 Mesurer l'efficacité (6 ex.)</a>
+    <a href="#analyse">🏁 Analyser et rendre compte (5 ex.)</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- ══════════════════════════════════════════════════════════
+     BLOC 1 – ENRICHIR ET EXPLOITER LE SIC
+══════════════════════════════════════════════════════════ -->
+<div class="bloc-titre" id="sic">
+  <span class="icone">🗂</span>
+  <h2>Bloc 1 – Enrichir, actualiser et exploiter le SIC</h2>
+</div>
+
+<div class="memo">
+  <div class="memo-titre">🗂 mémo</div>
+  <p>Le <strong>SIC</strong> (système d'information commercial) centralise les informations commerciales de l'entreprise. Il est enrichi par les inscriptions (site, carte de fidélité), les achats des clients, les actions de fidélisation et les remontées terrain des vendeurs.</p>
+  <code>Part d'une gamme (%) = (ventes de la gamme / ventes totales) × 100</code>
+  <code>Écart en points = part du magasin − part moyenne du réseau</code>
+  <p class="note">Un SIC non mis à jour est inutile, voire contre-productif (offres envoyées à une ancienne adresse, doublons…). Les données personnelles doivent être collectées avec le consentement du client (RGPD).</p>
+</div>
+
+<!-- EX 1 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 1</span>
+    <span class="badge badge-1">⬆ décollage</span>
+    <span class="exo-titre-txt">Le parrainage et la collecte d'informations</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      L'enseigne <strong>Herbéa</strong> vend des huiles essentielles, des soins bio et des ingrédients pour fabriquer ses cosmétiques soi-même. Elle lance un programme de parrainage : un client recommande l'enseigne à une personne de son entourage. Si cette personne crée un compte sur le site, le client reçoit un bon d'achat de 5 €.<br><br>
+      Lors de la création du compte, le nouveau client renseigne plusieurs onglets. Voici les informations collectées :<br>
+      • nom, prénom, date de naissance<br>
+      • adresse de facturation et adresse de livraison<br>
+      • adresse mail et numéro de téléphone<br>
+      • liste d'envies (produits mis de côté)<br>
+      • avis déposés sur les produits achetés<br>
+      • recettes de cosmétiques préférées
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Dans ce programme, qui est le parrain et qui est le filleul&nbsp;?</p></div>
+      <div class="question"><span class="q-num">2</span><p>Classez les informations collectées en deux catégories : informations d'identification et informations sur les goûts et préférences du client.</p></div>
+      <div class="question"><span class="q-num">3</span><p>Indiquez deux intérêts du parrainage pour l'enseigne.</p></div>
+      <div class="question"><span class="q-num">4</span><p>Expliquez à quoi serviront les informations sur les goûts et préférences du client.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Piste :</strong> le parrainage sert à la fois à conquérir de nouveaux clients et à fidéliser les clients actuels. Pensez aux deux.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <p>Le <span class="res">parrain</span> est le client actuel de l'enseigne qui recommande Herbéa. Le <span class="res">filleul</span> est la personne recommandée (un prospect) qui devient cliente en créant son compte.</p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <table class="tableau-corr">
+          <thead><tr><th>Informations d'identification</th><th>Goûts et préférences</th></tr></thead>
+          <tbody>
+            <tr><td>Nom, prénom, date de naissance</td><td>Liste d'envies</td></tr>
+            <tr><td>Adresses de facturation et de livraison</td><td>Avis déposés sur les produits</td></tr>
+            <tr><td>Adresse mail, téléphone</td><td>Recettes préférées</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">3</span>
+        <p>– Collecter de nouveaux contacts grâce à des clients déjà convaincus par les produits (conquête).<br>– Fidéliser les clients actuels en récompensant leur implication par un bon d'achat (fidélisation).</p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">4</span>
+        <p>Elles enrichissent le SIC et permettent de connaître les besoins de chaque client pour lui envoyer des offres ciblées et personnalisées (ex. : promotion sur un produit de sa liste d'envies).</p>
+        <p class="conclu">La date de naissance permet aussi une action de fidélisation classique : l'offre anniversaire.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 2 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 2</span>
+    <span class="badge badge-1">⬆ décollage</span>
+    <span class="exo-titre-txt">Calculer la part de chaque gamme dans les ventes</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Voici un extrait du SIC du magasin <strong>Herbéa de Lyon</strong> pour le 3<sup>e</sup> trimestre N (ventes en volume et en valeur, en k€).
+    </div>
+    <table class="tableau-donnees">
+      <thead><tr><th>Mois</th><th>Huiles essentielles</th><th>Soins visage bio</th><th>Savons et entretien</th><th>Coffrets cadeaux</th></tr></thead>
+      <tbody>
+        <tr><td>Juillet</td><td class="num">790 u. / 4,7 k€</td><td class="num">300 u. / 16,9 k€</td><td class="num">360 u. / 3,1 k€</td><td class="num">190 u. / 5,6 k€</td></tr>
+        <tr><td>Août</td><td class="num">820 u. / 4,9 k€</td><td class="num">320 u. / 17,4 k€</td><td class="num">370 u. / 3,2 k€</td><td class="num">210 u. / 6,1 k€</td></tr>
+        <tr><td>Septembre</td><td class="num">870 u. / 5,3 k€</td><td class="num">340 u. / 18,5 k€</td><td class="num">390 u. / 3,3 k€</td><td class="num">240 u. / 7,0 k€</td></tr>
+      </tbody>
+    </table>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Calculez, pour chaque gamme, le total du trimestre en volume et en valeur.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Calculez le total du magasin en volume et en valeur.</p></div>
+      <div class="question"><span class="q-num">3</span><p>Calculez la part de chaque gamme en volume et en valeur (arrondir à 0,01 %).</p></div>
+      <div class="question"><span class="q-num">4</span><p>Identifiez la gamme la plus vendue en volume et la gamme la plus vendue en valeur. Expliquez la différence.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Ordre de grandeur :</strong> le magasin vend environ 5 000 produits pour un peu moins de 100 k€. Les parts d'une même colonne doivent faire 100 %.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span><span class="c-num">2</span><span class="c-num">3</span>
+        <table class="tableau-corr">
+          <thead><tr><th>Gamme</th><th>Volume</th><th>Part volume</th><th>Valeur</th><th>Part valeur</th></tr></thead>
+          <tbody>
+            <tr><td>Huiles essentielles</td><td>2 480</td><td class="val">47,69 %</td><td>14,9 k€</td><td class="val">15,52 %</td></tr>
+            <tr><td>Soins visage bio</td><td>960</td><td class="val">18,46 %</td><td>52,8 k€</td><td class="val">55,00 %</td></tr>
+            <tr><td>Savons et entretien</td><td>1 120</td><td class="val">21,54 %</td><td>9,6 k€</td><td class="val">10,00 %</td></tr>
+            <tr><td>Coffrets cadeaux</td><td>640</td><td class="val">12,31 %</td><td>18,7 k€</td><td class="val">19,48 %</td></tr>
+            <tr class="t-total"><td>Total</td><td>5 200</td><td>100 %</td><td>96,0 k€</td><td>100 %</td></tr>
+          </tbody>
+        </table>
+        <code>Ex. : part volume HE = 2 480 / 5 200 × 100 = 47,69 %</code>
+        <code>Ex. : part valeur soins = 52,8 / 96 × 100 = 55,00 %</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">4</span>
+        <p class="res">En volume : les huiles essentielles (47,69 %). En valeur : les soins visage bio (55 %).</p>
+        <p class="conclu">Les huiles essentielles sont des produits à petit prix achetés souvent ; les soins visage sont moins nombreux mais beaucoup plus chers : ils pèsent davantage dans le chiffre d'affaires.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 3 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 3</span>
+    <span class="badge badge-2">⬆⬆ intermédiaire</span>
+    <span class="exo-titre-txt">Comparer le magasin à la moyenne du réseau</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Le responsable du magasin Herbéa de Lyon compare les parts de ses gammes (calculées à l'exercice 2) avec la moyenne des autres magasins de l'enseigne.
+    </div>
+    <table class="tableau-donnees">
+      <thead><tr><th>Gamme</th><th>Lyon volume</th><th>Réseau volume</th><th>Lyon valeur</th><th>Réseau valeur</th></tr></thead>
+      <tbody>
+        <tr><td>Huiles essentielles</td><td class="num">47,69 %</td><td>58,00 %</td><td class="num">15,52 %</td><td>21,00 %</td></tr>
+        <tr><td>Soins visage bio</td><td class="num">18,46 %</td><td>20,50 %</td><td class="num">55,00 %</td><td>57,50 %</td></tr>
+        <tr><td>Savons et entretien</td><td class="num">21,54 %</td><td>15,50 %</td><td class="num">10,00 %</td><td>8,50 %</td></tr>
+        <tr><td>Coffrets cadeaux</td><td class="num">12,31 %</td><td>6,00 %</td><td class="num">19,48 %</td><td>13,00 %</td></tr>
+      </tbody>
+    </table>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Calculez, pour chaque gamme, l'écart en points entre le magasin de Lyon et la moyenne du réseau (en volume et en valeur).</p></div>
+      <div class="question"><span class="q-num">2</span><p>Identifiez la gamme pour laquelle le magasin est le plus en retard sur le réseau.</p></div>
+      <div class="question"><span class="q-num">3</span><p>Identifiez la gamme pour laquelle le magasin fait mieux que le réseau.</p></div>
+      <div class="question"><span class="q-num">4</span><p>Rédigez la consigne qui sera enregistrée dans le SIC à l'attention des vendeurs.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Attention :</strong> on soustrait deux pourcentages, le résultat s'exprime en <strong>points</strong> et non en %. Un écart négatif signifie que Lyon fait moins bien que le réseau.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <table class="tableau-corr">
+          <thead><tr><th>Gamme</th><th>Écart volume</th><th>Écart valeur</th></tr></thead>
+          <tbody>
+            <tr><td>Huiles essentielles</td><td class="val">− 10,31 pts</td><td class="val">− 5,48 pts</td></tr>
+            <tr><td>Soins visage bio</td><td class="val">− 2,04 pts</td><td class="val">− 2,50 pts</td></tr>
+            <tr><td>Savons et entretien</td><td class="val">+ 6,04 pts</td><td class="val">+ 1,50 pts</td></tr>
+            <tr><td>Coffrets cadeaux</td><td class="val">+ 6,31 pts</td><td class="val">+ 6,48 pts</td></tr>
+          </tbody>
+        </table>
+        <code>Ex. : 47,69 − 58,00 = − 10,31 points</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <p class="res">Les huiles essentielles : − 10,31 points en volume et − 5,48 points en valeur.</p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">3</span>
+        <p class="res">Les coffrets cadeaux : + 6,31 points en volume et + 6,48 points en valeur (et dans une moindre mesure les savons et l'entretien).</p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">4</span>
+        <p><em>« Accentuer le conseil sur les huiles essentielles. Proposer systématiquement une huile essentielle aux clients qui achètent un coffret cadeau. »</em></p>
+        <p class="conclu">Les clients attirés par les coffrets sont une cible à exploiter pour développer la gamme en retard.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 4 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 4</span>
+    <span class="badge badge-2">⬆⬆ intermédiaire</span>
+    <span class="exo-titre-txt">Actualiser le fichier clients</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Avant l'envoi d'une offre réservée aux clients encartés, vous contrôlez un extrait du fichier clients du magasin Herbéa. Les vendeurs vous ont fait remonter les informations suivantes.
+    </div>
+    <table class="tableau-donnees">
+      <thead><tr><th>N° client</th><th>Nom</th><th>Situation constatée</th></tr></thead>
+      <tbody>
+        <tr><td>C1045</td><td>Mme Bertin</td><td>A indiqué en caisse avoir déménagé à Villeurbanne ; l'ancienne adresse figure toujours dans le fichier.</td></tr>
+        <tr><td>C1102 / C1387</td><td>M. Ferrand</td><td>Même nom, même date de naissance, même adresse : deux fiches.</td></tr>
+        <tr><td>C1210</td><td>Mme Nguyen</td><td>Le dernier mail envoyé est revenu avec le message « adresse introuvable ».</td></tr>
+        <tr><td>C1256</td><td>M. Lopez</td><td>N'a pas coché la case autorisant l'envoi d'offres commerciales.</td></tr>
+        <tr><td>C1301</td><td>Mme Roux</td><td>A acheté 3 coffrets ce mois-ci ; ses achats n'ont pas été rattachés à sa carte (carte oubliée).</td></tr>
+      </tbody>
+    </table>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Pour chaque client, indiquez l'action de mise à jour à réaliser dans le SIC.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Expliquez pourquoi un fichier clients non actualisé nuit à l'efficacité d'une action de fidélisation.</p></div>
+      <div class="question"><span class="q-num">3</span><p>Citez les quatre sources qui permettent d'enrichir le SIC.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Piste :</strong> pour M. Lopez, pensez à la réglementation sur les données personnelles.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <table class="tableau-corr">
+          <thead><tr><th>Client</th><th>Action de mise à jour</th></tr></thead>
+          <tbody>
+            <tr><td>Mme Bertin</td><td>Remplacer l'ancienne adresse par la nouvelle.</td></tr>
+            <tr><td>M. Ferrand</td><td>Fusionner les deux fiches (supprimer le doublon en conservant l'historique d'achats).</td></tr>
+            <tr><td>Mme Nguyen</td><td>Signaler l'adresse mail comme invalide et demander une nouvelle adresse lors de son prochain passage.</td></tr>
+            <tr><td>M. Lopez</td><td>L'exclure de l'envoi d'offres commerciales (absence de consentement, RGPD).</td></tr>
+            <tr><td>Mme Roux</td><td>Rattacher les achats à sa fiche (historique et points de fidélité).</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <p>Les offres envoyées à de mauvaises adresses sont perdues (coût inutile), les doublons faussent les statistiques et agacent le client qui reçoit deux fois le même message, et des achats non enregistrés empêchent de cibler correctement le client.</p>
+        <p class="conclu">La mise à jour du SIC est la condition de son efficacité.</p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">3</span>
+        <p class="res">Les actions de fidélisation, l'inscription sur le site ou à la carte de fidélité, les achats des clients, les remontées terrain des vendeurs.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- ══════════════════════════════════════════════════════════
+     BLOC 2 – MESURER L'EFFICACITÉ
+══════════════════════════════════════════════════════════ -->
+<hr class="section-sep">
+<div class="bloc-titre" id="mesure">
+  <span class="icone">📈</span>
+  <h2>Bloc 2 – Mesurer l'efficacité d'une action de fidélisation</h2>
+</div>
+
+<div class="memo">
+  <div class="memo-titre">🗂 mémo formules</div>
+  <code>Taux d'évolution = (valeur N − valeur N-1) / valeur N-1 × 100</code>
+  <code>Taux de réalisation = réalisé / objectif × 100</code>
+  <code>Taux de conversion (transformation) = nombre de passages en caisse / nombre de visiteurs × 100</code>
+  <code>Panier moyen = CA / nombre de passages en caisse</code>
+  <code>Taux de participation = nombre de participants / nombre de visiteurs × 100</code>
+  <code>Part d'un rayon = CA (ou ventes) du rayon / CA (ou ventes) total × 100</code>
+  <p class="note">Le chiffre d'affaires (CA) correspond au montant des ventes sur une période donnée. Taux de réalisation supérieur à 100 % = objectif dépassé.</p>
+</div>
+
+<!-- EX 5 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 5</span>
+    <span class="badge badge-1">⬆ décollage</span>
+    <span class="exo-titre-txt">Calculer des taux d'évolution</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Herbéa a organisé une journée « double points fidélité » le premier samedi de mars. Voici les résultats comparés à la même journée de l'année précédente.
+    </div>
+    <table class="tableau-donnees">
+      <thead><tr><th>Indicateur</th><th>Année N-1</th><th>Année N</th></tr></thead>
+      <tbody>
+        <tr><td>Chiffre d'affaires</td><td>18 400 €</td><td class="num">20 240 €</td></tr>
+        <tr><td>Nombre de visiteurs</td><td>950</td><td class="num">1 102</td></tr>
+        <tr><td>Nombre de passages en caisse</td><td>610</td><td class="num">671</td></tr>
+      </tbody>
+    </table>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Calculez l'écart entre N et N-1 pour chaque indicateur.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Calculez le taux d'évolution de chaque indicateur.</p></div>
+      <div class="question"><span class="q-num">3</span><p>Quel indicateur a le plus progressé&nbsp;?</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Ordre de grandeur :</strong> les écarts sont faibles par rapport aux valeurs de départ : les taux seront compris entre 5 % et 20 %. On divise toujours par la valeur <strong>N-1</strong>.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span><span class="c-num">2</span>
+        <table class="tableau-corr">
+          <thead><tr><th>Indicateur</th><th>Écart</th><th>Calcul</th><th>Taux d'évolution</th></tr></thead>
+          <tbody>
+            <tr><td>CA</td><td>+ 1 840 €</td><td>1 840 / 18 400 × 100</td><td class="val">+ 10 %</td></tr>
+            <tr><td>Visiteurs</td><td>+ 152</td><td>152 / 950 × 100</td><td class="val">+ 16 %</td></tr>
+            <tr><td>Passages en caisse</td><td>+ 61</td><td>61 / 610 × 100</td><td class="val">+ 10 %</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">3</span>
+        <p class="res">Le nombre de visiteurs (+ 16 %).</p>
+        <p class="conclu">L'action a surtout attiré du monde dans le magasin ; le nombre d'acheteurs a progressé moins vite que le nombre de visiteurs.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 6 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 6</span>
+    <span class="badge badge-1">⬆ décollage</span>
+    <span class="exo-titre-txt">Panier moyen et taux de conversion</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Lors d'une vente privée réservée aux clients encartés, le magasin Herbéa a enregistré :<br><br>
+      • chiffre d'affaires : <strong>6 384 €</strong><br>
+      • nombre de visiteurs : <strong>840</strong><br>
+      • nombre de passages en caisse : <strong>336</strong><br>
+      • passages en caisse avec la carte de fidélité : <strong>210</strong>
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Calculez le panier moyen.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Calculez le taux de conversion et interprétez-le en une phrase.</p></div>
+      <div class="question"><span class="q-num">3</span><p>Calculez la part des passages en caisse réalisés avec la carte de fidélité.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Ordre de grandeur :</strong> 6 384 / 336 donne un nombre proche de 20 €. Un taux de conversion est toujours inférieur ou égal à 100 %.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <code>Panier moyen = 6 384 / 336 = 19,00 €</code>
+        <p class="res">Panier moyen = <strong>19,00 €</strong></p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <code>Taux de conversion = 336 / 840 × 100 = 40 %</code>
+        <p class="res">Taux de conversion = <strong>40 %</strong></p>
+        <p class="conclu">4 visiteurs sur 10 ont acheté au moins un produit.</p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">3</span>
+        <code>210 / 336 × 100 = 62,5 %</code>
+        <p class="res">62,5 % des achats ont été réalisés par des clients encartés.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 7 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 7</span>
+    <span class="badge badge-2">⬆⬆ intermédiaire</span>
+    <span class="exo-titre-txt">Tableau de résultats N / N-1 et constats</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Le premier samedi d'octobre, Herbéa organise l'action « atelier découverte de l'aromathérapie » : les clients encartés peuvent s'inscrire gratuitement à un atelier de 30 minutes en magasin. Voici les résultats.
+    </div>
+    <table class="tableau-donnees">
+      <thead><tr><th>Indicateur</th><th>N-1</th><th>N</th></tr></thead>
+      <tbody>
+        <tr><td>CA réalisé</td><td>22 100 €</td><td class="num">24 650 €</td></tr>
+        <tr><td>Nombre de visiteurs</td><td>1 040</td><td class="num">1 180</td></tr>
+        <tr><td>Visiteurs détenteurs de la carte de fidélité</td><td>572</td><td class="num">708</td></tr>
+        <tr><td>Nombre de passages en caisse</td><td>728</td><td class="num">826</td></tr>
+        <tr><td>Nombre d'achats au rayon huiles essentielles</td><td>312</td><td class="num">372</td></tr>
+        <tr><td>Nombre d'inscrits aux ateliers</td><td>80</td><td class="num">96</td></tr>
+      </tbody>
+    </table>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Calculez l'écart et le taux d'évolution de chaque indicateur (arrondir à 0,01 %).</p></div>
+      <div class="question"><span class="q-num">2</span><p>Rédigez deux constats sur les résultats de l'action.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Ordre de grandeur :</strong> tous les indicateurs augmentent de 10 % à 25 %. Si vous obtenez un taux négatif, vérifiez l'ordre de la soustraction.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <table class="tableau-corr">
+          <thead><tr><th>Indicateur</th><th>Écart</th><th>Taux d'évolution</th></tr></thead>
+          <tbody>
+            <tr><td>CA réalisé</td><td>+ 2 550 €</td><td class="val">+ 11,54 %</td></tr>
+            <tr><td>Visiteurs</td><td>+ 140</td><td class="val">+ 13,46 %</td></tr>
+            <tr><td>Visiteurs encartés</td><td>+ 136</td><td class="val">+ 23,78 %</td></tr>
+            <tr><td>Passages en caisse</td><td>+ 98</td><td class="val">+ 13,46 %</td></tr>
+            <tr><td>Achats huiles essentielles</td><td>+ 60</td><td class="val">+ 19,23 %</td></tr>
+            <tr><td>Inscrits aux ateliers</td><td>+ 16</td><td class="val">+ 20,00 %</td></tr>
+          </tbody>
+        </table>
+        <code>Ex. : (24 650 − 22 100) / 22 100 × 100 = 11,54 %</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <p>– Tous les indicateurs progressent : le CA augmente de 11,54 % et la fréquentation de 13,46 %.<br>– La plus forte hausse concerne les visiteurs encartés (+ 23,78 %) : l'action a bien mobilisé les clients fidèles, et les achats d'huiles essentielles progressent nettement (+ 19,23 %).</p>
+        <p class="conclu">Le CA progresse moins vite que le nombre de passages en caisse : le panier moyen a donc légèrement baissé (voir exercice 8).</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 8 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 8</span>
+    <span class="badge badge-2">⬆⬆ intermédiaire</span>
+    <span class="exo-titre-txt">Calculer et interpréter les ratios d'une action</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Reprenez les résultats de l'année N de l'action « atelier découverte » :<br><br>
+      • CA : <strong>24 650 €</strong> – visiteurs : <strong>1 180</strong> – visiteurs encartés : <strong>708</strong><br>
+      • passages en caisse : <strong>826</strong> – achats huiles essentielles : <strong>372</strong> – inscrits aux ateliers : <strong>96</strong><br><br>
+      En N-1, le panier moyen était de <strong>30,36 €</strong>.
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Calculez la part des visiteurs détenteurs de la carte de fidélité.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Calculez le panier moyen et comparez-le à celui de N-1.</p></div>
+      <div class="question"><span class="q-num">3</span><p>Calculez le taux de conversion.</p></div>
+      <div class="question"><span class="q-num">4</span><p>Calculez la part des passages en caisse comprenant un achat d'huile essentielle.</p></div>
+      <div class="question"><span class="q-num">5</span><p>Calculez le taux de participation aux ateliers.</p></div>
+      <div class="question"><span class="q-num">6</span><p>Rédigez un constat global sur la réussite de l'opération.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Ordre de grandeur :</strong> plus de la moitié des visiteurs sont encartés ; le panier moyen est proche de 30 €.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <code>708 / 1 180 × 100 = 60 %</code>
+        <p class="res">60 % des visiteurs sont des clients encartés.</p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <code>24 650 / 826 = 29,84 €</code>
+        <p class="res">Panier moyen = 29,84 €, soit 0,52 € de moins qu'en N-1 (30,36 €).</p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">3</span>
+        <code>826 / 1 180 × 100 = 70 %</code>
+        <p class="res">Taux de conversion = 70 % : 7 visiteurs sur 10 ont acheté.</p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">4</span>
+        <code>372 / 826 × 100 = 45,04 %</code>
+        <p class="res">45,04 % des passages en caisse comprennent une huile essentielle.</p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">5</span>
+        <code>96 / 1 180 × 100 = 8,14 %</code>
+        <p class="res">8,14 % des visiteurs ont participé à un atelier.</p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">6</span>
+        <p class="conclu">L'opération est une réussite : le taux de conversion est élevé (70 %), les clients fidèles se sont fortement déplacés (60 % des visiteurs) et près d'un acheteur sur deux a pris une huile essentielle. Point de vigilance : le panier moyen baisse légèrement ; les vendeurs pourraient proposer davantage de ventes additionnelles pendant les ateliers.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 9 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 9</span>
+    <span class="badge badge-3">⬆⬆⬆ niveau examen</span>
+    <span class="exo-titre-txt">Taux de réalisation – magasin et site Internet</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Herbéa a organisé un jeu-concours du 1<sup>er</sup> au 15 mai, en magasin et sur son site marchand, pour gagner un diffuseur d'huiles essentielles. Le siège avait fixé des objectifs.
+    </div>
+    <table class="tableau-donnees">
+      <thead><tr><th>Magasin</th><th>Objectif</th><th>Réalisé</th></tr></thead>
+      <tbody>
+        <tr><td>Nombre de visiteurs</td><td>12 000</td><td class="num">11 280</td></tr>
+        <tr><td>Nombre de participants au jeu</td><td>2 400</td><td class="num">2 160</td></tr>
+        <tr><td>Nombre de nouveaux clients encartés</td><td>60</td><td class="num">66</td></tr>
+      </tbody>
+    </table>
+    <table class="tableau-donnees">
+      <thead><tr><th>Site Internet</th><th>Objectif</th><th>Réalisé</th></tr></thead>
+      <tbody>
+        <tr><td>Nombre de sessions ouvertes</td><td>50 000</td><td class="num">52 500</td></tr>
+        <tr><td>Durée moyenne de visite</td><td>8 min</td><td class="num">10 min</td></tr>
+        <tr><td>Nombre de nouveaux inscrits</td><td>900</td><td class="num">1 080</td></tr>
+        <tr><td>Nombre d'abonnements à la newsletter</td><td>750</td><td class="num">720</td></tr>
+      </tbody>
+    </table>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Calculez le taux de réalisation de chaque objectif.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Calculez le taux de participation au jeu en magasin (objectif et réalisé).</p></div>
+      <div class="question"><span class="q-num">3</span><p>Rédigez les constats pour le magasin puis pour le site Internet.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Ordre de grandeur :</strong> les taux de réalisation sont tous compris entre 90 % et 130 %. Au-dessus de 100 %, l'objectif est dépassé.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <table class="tableau-corr">
+          <thead><tr><th>Indicateur</th><th>Calcul</th><th>Taux de réalisation</th></tr></thead>
+          <tbody>
+            <tr><td>Visiteurs magasin</td><td>11 280 / 12 000 × 100</td><td class="val">94 %</td></tr>
+            <tr><td>Participants magasin</td><td>2 160 / 2 400 × 100</td><td class="val">90 %</td></tr>
+            <tr><td>Nouveaux encartés</td><td>66 / 60 × 100</td><td class="val">110 %</td></tr>
+            <tr><td>Sessions ouvertes</td><td>52 500 / 50 000 × 100</td><td class="val">105 %</td></tr>
+            <tr><td>Durée moyenne de visite</td><td>10 / 8 × 100</td><td class="val">125 %</td></tr>
+            <tr><td>Nouveaux inscrits</td><td>1 080 / 900 × 100</td><td class="val">120 %</td></tr>
+            <tr><td>Abonnements newsletter</td><td>720 / 750 × 100</td><td class="val">96 %</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <code>Objectif : 2 400 / 12 000 × 100 = 20 %</code>
+        <code>Réalisé : 2 160 / 11 280 × 100 = 19,15 %</code>
+        <p class="res">Le taux de participation réalisé (19,15 %) est légèrement inférieur à l'objectif (20 %).</p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">3</span>
+        <p><strong>Magasin :</strong> les objectifs de fréquentation (94 %) et de participation (90 %) ne sont pas atteints ; en revanche, l'objectif de nouveaux clients encartés est dépassé (110 %).</p>
+        <p><strong>Site Internet :</strong> les objectifs sont dépassés pour les sessions (105 %), la durée de visite (+ 2 min, 125 %) et les nouveaux inscrits (120 %). Seul l'objectif d'abonnements à la newsletter n'est pas atteint (96 %).</p>
+        <p class="conclu">Le jeu a mieux fonctionné sur le site qu'en magasin : il faut chercher les causes des résultats du magasin.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 10 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 10</span>
+    <span class="badge badge-3">⬆⬆⬆ niveau examen</span>
+    <span class="exo-titre-txt">Retrouver une donnée manquante</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Le tableau de bord d'une opération de fidélisation est incomplet. Vous disposez des informations suivantes :<br><br>
+      • CA de l'opération en N : <strong>31 590 €</strong> ; taux d'évolution par rapport à N-1 : <strong>+ 8 %</strong><br>
+      • nombre de participants réalisé : <strong>1 728</strong> ; taux de réalisation : <strong>96 %</strong><br>
+      • panier moyen d'une autre journée : <strong>32,50 €</strong> pour <strong>940</strong> passages en caisse
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Retrouvez le CA de l'opération en N-1.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Retrouvez l'objectif de participants fixé par le responsable.</p></div>
+      <div class="question"><span class="q-num">3</span><p>Retrouvez le CA de l'autre journée.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Ordre de grandeur :</strong> le CA N-1 est inférieur au CA N (évolution positive). L'objectif est supérieur au réalisé (taux &lt; 100 %).</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <code>CA N = CA N-1 × 1,08  donc  CA N-1 = 31 590 / 1,08 = 29 250 €</code>
+        <p class="res">CA N-1 = <strong>29 250 €</strong></p>
+        <p class="conclu">Vérification : (31 590 − 29 250) / 29 250 × 100 = 8 %.</p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <code>Objectif = réalisé / taux de réalisation = 1 728 / 0,96 = 1 800</code>
+        <p class="res">Objectif = <strong>1 800 participants</strong></p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">3</span>
+        <code>CA = panier moyen × passages en caisse = 32,50 × 940 = 30 550 €</code>
+        <p class="res">CA = <strong>30 550 €</strong></p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- ══════════════════════════════════════════════════════════
+     BLOC 3 – ANALYSER, RENDRE COMPTE, PROPOSER
+══════════════════════════════════════════════════════════ -->
+<hr class="section-sep">
+<div class="bloc-titre" id="analyse">
+  <span class="icone">🏁</span>
+  <h2>Bloc 3 – Analyser, rendre compte et proposer des améliorations</h2>
+</div>
+
+<div class="memo">
+  <div class="memo-titre">🗂 mémo</div>
+  <p>L'analyse des résultats permet de <strong>mesurer la réussite de l'action</strong>, de <strong>connaître son impact sur la satisfaction</strong> et de <strong>décider de son renouvellement</strong> (renouveler, modifier ou abandonner).</p>
+  <code>Outils de mesure de la satisfaction : avis sur Internet, retours terrain des vendeurs, questionnaire clients</code>
+  <code>Résultat de l'opération = CA HT après remise − coût d'achat HT des marchandises vendues − coûts de l'opération</code>
+  <code>Prix HT = prix TTC / 1,2  |  CA avant remise = CA après remise / (1 − taux de remise)</code>
+  <p class="note">Les dysfonctionnements se classent souvent en trois familles : personnel, communication, théâtralisation en magasin. Les axes d'amélioration doivent être réalisables et adaptés à la stratégie et aux produits de l'enseigne. Le compte rendu est destiné au responsable : il est neutre, synthétique et structuré.</p>
+</div>
+
+<!-- EX 11 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 11</span>
+    <span class="badge badge-2">⬆⬆ intermédiaire</span>
+    <span class="exo-titre-txt">Analyser une enquête de satisfaction</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Le magasin Herbéa a interrogé <strong>200 clients encartés</strong> sur ses actions de fidélisation. Résultats en % des personnes interrogées :
+    </div>
+    <table class="tableau-donnees">
+      <thead><tr><th>Critère</th><th>Très insat.</th><th>Insat.</th><th>Moy. sat.</th><th>Satisfait</th><th>Très sat.</th></tr></thead>
+      <tbody>
+        <tr><td>Ventes privées</td><td>2</td><td>5</td><td>8</td><td>45</td><td>40</td></tr>
+        <tr><td>Offre anniversaire (bon de 5 €)</td><td>20</td><td>30</td><td>35</td><td>10</td><td>5</td></tr>
+        <tr><td>Nombre d'actions dans l'année</td><td>15</td><td>35</td><td>30</td><td>15</td><td>5</td></tr>
+        <tr><td>Avantages de la carte de fidélité</td><td>3</td><td>7</td><td>12</td><td>48</td><td>30</td></tr>
+        <tr><td>Ateliers découverte</td><td>1</td><td>4</td><td>10</td><td>40</td><td>45</td></tr>
+      </tbody>
+    </table>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Calculez, pour chaque critère, le pourcentage de clients satisfaits ou très satisfaits, puis le nombre de clients correspondant.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Identifiez les points forts et les points faibles des actions de fidélisation.</p></div>
+      <div class="question"><span class="q-num">3</span><p>Proposez un axe d'amélioration pour chaque point faible.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Piste :</strong> pour passer d'un pourcentage à un nombre de clients, multipliez par 200 puis divisez par 100 (soit × 2).</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <table class="tableau-corr">
+          <thead><tr><th>Critère</th><th>Satisfaits + très satisfaits</th><th>Nombre de clients</th></tr></thead>
+          <tbody>
+            <tr><td>Ventes privées</td><td>45 + 40 = 85 %</td><td class="val">170</td></tr>
+            <tr><td>Offre anniversaire</td><td>10 + 5 = 15 %</td><td class="val">30</td></tr>
+            <tr><td>Nombre d'actions</td><td>15 + 5 = 20 %</td><td class="val">40</td></tr>
+            <tr><td>Avantages de la carte</td><td>48 + 30 = 78 %</td><td class="val">156</td></tr>
+            <tr><td>Ateliers découverte</td><td>40 + 45 = 85 %</td><td class="val">170</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <p><strong>Points forts :</strong> ventes privées (85 %), ateliers découverte (85 %), avantages de la carte (78 %).</p>
+        <p><strong>Points faibles :</strong> offre anniversaire (85 % de clients non satisfaits) et nombre d'actions dans l'année (80 % de clients non satisfaits).</p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">3</span>
+        <p>– Offre anniversaire : la rendre plus attractive (remise plus forte sur un soin, produit offert de valeur) pour que le client se sente réellement récompensé.<br>– Nombre d'actions : programmer davantage d'actions dans l'année (ateliers plus fréquents, ventes privées de saison, jeu-concours).</p>
+        <p class="conclu">Les axes proposés s'appuient sur ce qui fonctionne déjà (ateliers, ventes privées) : ils sont réalisables et cohérents avec l'enseigne.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 12 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 12</span>
+    <span class="badge badge-3">⬆⬆⬆ niveau examen</span>
+    <span class="exo-titre-txt">Identifier les dysfonctionnements et proposer des solutions</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Après le jeu-concours de mai (exercice 9), le responsable a recueilli des avis clients et des retours de vendeurs :<br><br>
+      ① <em>« J'ai demandé à une vendeuse comment participer, elle ne savait pas. »</em><br>
+      ② <em>« Je n'ai vu le jeu que sur Facebook, rien dans la vitrine. »</em><br>
+      ③ <em>« Je n'ai pas trouvé le bulletin de participation dans le magasin. »</em><br>
+      ④ <em>« Un seul diffuseur à gagner, ça ne donne pas envie de jouer. »</em><br>
+      ⑤ Retour vendeur : <em>« On n'a pas reçu le règlement du jeu avant le lancement. »</em><br>
+      ⑥ <em>« Je ne comprenais pas s'il fallait acheter pour jouer. »</em>
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Classez chaque avis selon la famille de dysfonctionnement : personnel, communication ou théâtralisation en magasin.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Proposez une solution concrète pour chaque famille de dysfonctionnement.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Piste :</strong> la théâtralisation concerne la mise en scène de l'événement dans le magasin (emplacement, mise en valeur du lot).</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span><span class="c-num">2</span>
+        <table class="tableau-corr">
+          <thead><tr><th>Famille</th><th>Avis</th><th>Solution proposée</th></tr></thead>
+          <tbody>
+            <tr><td>Personnel</td><td>① ⑤</td><td>Informer l'équipe avant le lancement : note d'information sur le règlement et les modalités de participation, réunion rapide du responsable.</td></tr>
+            <tr><td>Communication</td><td>② ⑥</td><td>Placer des affiches en vitrine et en magasin, préciser clairement les règles (sans obligation d'achat), faire inviter chaque client à jouer par les vendeurs.</td></tr>
+            <tr><td>Théâtralisation</td><td>③ ④</td><td>Créer un espace dédié au jeu près du rayon huiles essentielles, avec les bulletins bien visibles ; mettre en valeur le lot par une démonstration du diffuseur, voire augmenter le nombre de lots.</td></tr>
+          </tbody>
+        </table>
+        <p class="conclu">Toute solution cohérente, réalisable et adaptée à l'enseigne est acceptée.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 13 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 13</span>
+    <span class="badge badge-3">⬆⬆⬆ niveau examen</span>
+    <span class="exo-titre-txt">Mesurer la rentabilité d'une action de fidélisation</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      En novembre N, Herbéa a envoyé un mailing à ses clients encartés : <strong>− 15 %</strong> sur les coffrets cadeaux et <strong>− 10 %</strong> sur les soins visage. Objectif : une hausse de <strong>10 %</strong> du CA des clients encartés par rapport à novembre N-1.<br><br>
+      • CA HT après remise réalisé avec les clients encartés : coffrets <strong>15 300 €</strong>, soins visage <strong>27 000 €</strong><br>
+      • CA HT des clients encartés en novembre N-1 : <strong>37 600 €</strong><br>
+      • coût d'achat des marchandises vendues : <strong>36 720 € TTC</strong> (TVA 20 %)<br>
+      • coûts de l'opération : conception <strong>850 €</strong>, impression <strong>220 €</strong>, envoi <strong>330 €</strong>
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Calculez le CA HT total après remise et son évolution par rapport à N-1. L'objectif est-il atteint&nbsp;?</p></div>
+      <div class="question"><span class="q-num">2</span><p>Calculez le CA HT avant remise de chaque gamme et le montant de chaque remise accordée.</p></div>
+      <div class="question"><span class="q-num">3</span><p>Calculez le coût d'achat HT des marchandises vendues et le coût total de l'opération.</p></div>
+      <div class="question"><span class="q-num">4</span><p>Calculez le résultat de l'opération et concluez sur sa rentabilité.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Ordre de grandeur :</strong> CA avant remise = CA après remise / 0,85 (ou / 0,90) ; il est donc plus élevé. Le résultat doit être positif et nettement inférieur au CA.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <code>CA HT après remise = 15 300 + 27 000 = 42 300 €</code>
+        <code>Évolution = (42 300 − 37 600) / 37 600 × 100 = + 12,5 %</code>
+        <p class="res">+ 12,5 % pour un objectif de + 10 % : l'objectif est dépassé.</p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <table class="tableau-corr">
+          <thead><tr><th>Gamme</th><th>CA avant remise</th><th>Remise accordée</th></tr></thead>
+          <tbody>
+            <tr><td>Coffrets</td><td>15 300 / 0,85 = 18 000 €</td><td class="val">18 000 − 15 300 = 2 700 €</td></tr>
+            <tr><td>Soins visage</td><td>27 000 / 0,90 = 30 000 €</td><td class="val">30 000 − 27 000 = 3 000 €</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">3</span>
+        <code>Coût d'achat HT = 36 720 / 1,2 = 30 600 €</code>
+        <code>Coûts de l'opération = 850 + 220 + 330 = 1 400 €</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">4</span>
+        <table class="tableau-corr">
+          <thead><tr><th>Éléments</th><th>Montant</th></tr></thead>
+          <tbody>
+            <tr><td>CA HT avant remise (18 000 + 30 000)</td><td>48 000 €</td></tr>
+            <tr><td>− Remises (2 700 + 3 000)</td><td>− 5 700 €</td></tr>
+            <tr><td>− Coût d'achat HT des marchandises</td><td>− 30 600 €</td></tr>
+            <tr><td>− Coûts de l'opération</td><td>− 1 400 €</td></tr>
+            <tr class="t-total"><td>Résultat</td><td class="val">10 300 €</td></tr>
+          </tbody>
+        </table>
+        <p class="conclu">L'opération est rentable : elle dégage un résultat de 10 300 € et dépasse l'objectif de hausse du CA des clients encartés. Elle peut être renouvelée.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 14 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 14</span>
+    <span class="badge badge-exam">🏁 cas de synthèse</span>
+    <span class="exo-titre-txt">Analyser les résultats des ventes privées d'un magasin</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Mme Morel dirige le magasin <strong>Petit Monde</strong> de Valence (articles pour enfants), qui appartient à un groupe de quatre magasins. Elle organise chaque année une vente privée réservée aux clients encartés. Voici son tableau de bord.
+    </div>
+    <table class="tableau-donnees">
+      <thead><tr><th>Indicateur</th><th>Puériculture</th><th>Vêtements 0-24 mois</th><th>Vêtements 3-6 ans</th></tr></thead>
+      <tbody>
+        <tr><td>CA N</td><td class="num">7 140 €</td><td class="num">2 590 €</td><td class="num">1 840 €</td></tr>
+        <tr><td>CA N-1</td><td>6 800 €</td><td>2 800 €</td><td>2 000 €</td></tr>
+        <tr><td>Objectif de CA N</td><td>7 000 €</td><td>2 900 €</td><td>2 100 €</td></tr>
+        <tr><td>Panier moyen N</td><td class="num">357,00 €</td><td class="num">32,40 €</td><td class="num">36,80 €</td></tr>
+        <tr><td>Panier moyen N-1</td><td>340,00 €</td><td>35,00 €</td><td>40,00 €</td></tr>
+        <tr><td>Objectif de panier moyen N</td><td>350,00 €</td><td>36,00 €</td><td>40,00 €</td></tr>
+      </tbody>
+    </table>
+    <table class="tableau-donnees">
+      <thead><tr><th>Magasin du groupe</th><th>Habitants</th><th>CA puériculture N</th><th>CA vêt. 0-24 mois N</th><th>CA vêt. 3-6 ans N</th></tr></thead>
+      <tbody>
+        <tr><td>Grenoble</td><td>158 000</td><td>9 860 €</td><td>3 720 €</td><td>2 650 €</td></tr>
+        <tr><td>Valence</td><td>64 000</td><td class="num">7 140 €</td><td class="num">2 590 €</td><td class="num">1 840 €</td></tr>
+        <tr><td>Romans-sur-Isère</td><td>33 000</td><td>6 180 €</td><td>2 460 €</td><td>1 700 €</td></tr>
+        <tr><td>Montélimar</td><td>40 000</td><td>5 420 €</td><td>2 310 €</td><td>1 610 €</td></tr>
+      </tbody>
+    </table>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Calculez le taux d'évolution du CA et du panier moyen de chaque secteur entre N-1 et N.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Comparez les résultats N aux objectifs fixés (écart en euros).</p></div>
+      <div class="question"><span class="q-num">3</span><p>Calculez la moyenne du groupe pour le CA de chaque secteur et situez le magasin de Valence.</p></div>
+      <div class="question"><span class="q-num">4</span><p>Quel est le magasin le plus performant&nbsp;? Proposez une explication.</p></div>
+      <div class="question"><span class="q-num">5</span><p>Le groupe constate une baisse générale des ventes de vêtements pour enfants en magasin, alors que les clients achètent de plus en plus ces articles en ligne ; la puériculture, elle, nécessite essai et conseil. Proposez deux axes d'amélioration à Mme Morel.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Ordre de grandeur :</strong> un seul secteur progresse (environ + 5 %), les deux autres reculent de 7 % à 8 %. La moyenne du groupe en puériculture est très proche de 7 000 €.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <table class="tableau-corr">
+          <thead><tr><th>Secteur</th><th>Évolution CA</th><th>Évolution panier moyen</th></tr></thead>
+          <tbody>
+            <tr><td>Puériculture</td><td class="val">(7 140 − 6 800) / 6 800 × 100 = + 5 %</td><td class="val">(357 − 340) / 340 × 100 = + 5 %</td></tr>
+            <tr><td>Vêtements 0-24 mois</td><td class="val">(2 590 − 2 800) / 2 800 × 100 = − 7,5 %</td><td class="val">(32,40 − 35) / 35 × 100 = − 7,43 %</td></tr>
+            <tr><td>Vêtements 3-6 ans</td><td class="val">(1 840 − 2 000) / 2 000 × 100 = − 8 %</td><td class="val">(36,80 − 40) / 40 × 100 = − 8 %</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <table class="tableau-corr">
+          <thead><tr><th>Secteur</th><th>Écart CA / objectif</th><th>Écart panier / objectif</th></tr></thead>
+          <tbody>
+            <tr><td>Puériculture</td><td class="val">+ 140 € (atteint)</td><td class="val">+ 7,00 € (atteint)</td></tr>
+            <tr><td>Vêtements 0-24 mois</td><td class="val">− 310 € (non atteint)</td><td class="val">− 3,60 € (non atteint)</td></tr>
+            <tr><td>Vêtements 3-6 ans</td><td class="val">− 260 € (non atteint)</td><td class="val">− 3,20 € (non atteint)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">3</span>
+        <code>Puériculture : (9 860 + 7 140 + 6 180 + 5 420) / 4 = 7 150 €</code>
+        <code>Vêtements 0-24 mois : (3 720 + 2 590 + 2 460 + 2 310) / 4 = 2 770 €</code>
+        <code>Vêtements 3-6 ans : (2 650 + 1 840 + 1 700 + 1 610) / 4 = 1 950 €</code>
+        <p class="res">Valence est dans la moyenne en puériculture (− 10 €) mais en dessous pour les vêtements 0-24 mois (− 180 €) et 3-6 ans (− 110 €).</p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">4</span>
+        <p class="res">Grenoble est le plus performant dans les trois secteurs.</p>
+        <p class="conclu">Sa zone de chalandise est beaucoup plus peuplée (158 000 habitants) : il dispose de plus de clients potentiels.</p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">5</span>
+        <p>– Concentrer la vente privée sur la puériculture : démonstrations de matériel, conseils personnalisés, essais en magasin.<br>– Mieux communiquer sur la vente privée (mail ou SMS personnalisé aux clients encartés) et, pour les vêtements, proposer une offre complémentaire en ligne (réservation sur le site et retrait en magasin).</p>
+        <p class="conclu">Toute proposition cohérente avec les constats est acceptée.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 15 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 15</span>
+    <span class="badge badge-exam">🏁 cas de synthèse</span>
+    <span class="exo-titre-txt">Évaluer un jeu-concours et rédiger une note au responsable</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Le magasin Herbéa de Lyon a organisé, du 1<sup>er</sup> au 24 décembre, un jeu-concours « calendrier de l'Avent » : chaque jour, un client encarté tiré au sort gagne un coffret. Votre responsable, <strong>Mme Lambert</strong>, vous demande d'évaluer l'opération.
+    </div>
+    <table class="tableau-donnees">
+      <thead><tr><th>Indicateur</th><th>Objectif</th><th>Réalisé</th></tr></thead>
+      <tbody>
+        <tr><td>Nombre de visiteurs</td><td>15 000</td><td class="num">14 100</td></tr>
+        <tr><td>Nombre de participants au jeu</td><td>3 000</td><td class="num">2 538</td></tr>
+        <tr><td>Nombre de nouveaux clients encartés</td><td>75</td><td class="num">84</td></tr>
+        <tr><td>CA de la période</td><td>98 000 €</td><td class="num">101 920 €</td></tr>
+        <tr><td>Panier moyen</td><td>27,00 €</td><td class="num">?</td></tr>
+        <tr><td>Nombre de passages en caisse</td><td>–</td><td class="num">3 640</td></tr>
+      </tbody>
+    </table>
+    <div class="contexte">
+      <strong>Retours recueillis :</strong> plusieurs clients ignoraient l'existence du jeu ; l'urne était placée derrière la caisse, peu visible ; deux vendeurs intérimaires n'avaient pas été informés des modalités ; de nombreux clients ont apprécié de gagner un coffret.
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Calculez le taux de réalisation des quatre premiers objectifs.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Calculez le panier moyen réalisé et son taux de réalisation.</p></div>
+      <div class="question"><span class="q-num">3</span><p>Calculez le taux de participation (objectif et réalisé) et le taux de conversion.</p></div>
+      <div class="question"><span class="q-num">4</span><p>Rédigez une note à l'attention de Mme Lambert structurée en trois parties : 1. constats chiffrés ; 2. causes des résultats ; 3. axes d'amélioration et décision proposée.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Ordre de grandeur :</strong> le panier moyen est proche de 28 €. Le taux de participation réalisé est inférieur à 20 %.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <table class="tableau-corr">
+          <thead><tr><th>Indicateur</th><th>Calcul</th><th>Taux de réalisation</th></tr></thead>
+          <tbody>
+            <tr><td>Visiteurs</td><td>14 100 / 15 000 × 100</td><td class="val">94 %</td></tr>
+            <tr><td>Participants</td><td>2 538 / 3 000 × 100</td><td class="val">84,6 %</td></tr>
+            <tr><td>Nouveaux encartés</td><td>84 / 75 × 100</td><td class="val">112 %</td></tr>
+            <tr><td>CA</td><td>101 920 / 98 000 × 100</td><td class="val">104 %</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <code>Panier moyen = 101 920 / 3 640 = 28,00 €</code>
+        <code>Taux de réalisation = 28 / 27 × 100 = 103,70 %</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">3</span>
+        <code>Taux de participation objectif = 3 000 / 15 000 × 100 = 20 %</code>
+        <code>Taux de participation réalisé = 2 538 / 14 100 × 100 = 18 %</code>
+        <code>Taux de conversion = 3 640 / 14 100 × 100 = 25,82 %</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">4</span>
+        <p style="font-style:italic;color:#2c3a31;font-size:13px;line-height:1.9;border:1px solid #cde8d6;background:#ffffff;padding:14px;border-radius:5px;">
+          <strong>Note à l'attention de Mme Lambert</strong><br>
+          <strong>Objet :</strong> évaluation du jeu-concours « calendrier de l'Avent »<br>
+          <br>
+          Madame,<br>
+          <br>
+          <strong>1. Constats chiffrés</strong><br>
+          Les objectifs commerciaux sont dépassés : le CA atteint 101 920 € (104 % de l'objectif), le panier moyen 28,00 € (103,70 %) et le nombre de nouveaux clients encartés 84 (112 %). En revanche, la fréquentation (94 %) et surtout la participation au jeu (84,6 %) restent en dessous des objectifs : 18 % des visiteurs ont joué, pour un objectif de 20 %.<br>
+          <br>
+          <strong>2. Causes des résultats</strong><br>
+          Le lot (un coffret par jour) a été apprécié des clients. La participation insuffisante s'explique par un manque de communication (clients non informés), une mauvaise théâtralisation (urne peu visible derrière la caisse) et une information incomplète du personnel intérimaire.<br>
+          <br>
+          <strong>3. Axes d'amélioration et décision proposée</strong><br>
+          – Informer l'ensemble de l'équipe, intérimaires compris, avant le lancement.<br>
+          – Annoncer le jeu en vitrine, par affichage et par mail aux clients encartés.<br>
+          – Installer l'urne dans un espace dédié et visible, à côté des coffrets à gagner.<br>
+          Je vous propose de renouveler l'opération l'an prochain en intégrant ces améliorations.<br>
+          <br>
+          Prénom Nom
+        </p>
+        <p class="conclu">Le compte rendu reste neutre : il présente les faits chiffrés avant d'en tirer des propositions.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+</main>
+
+<footer class="site-footer">
+  Bac pro MCV – Bloc 3 « Fidéliser la clientèle et développer la relation client » &nbsp;|&nbsp; 15 exercices progressifs – Évaluer les actions de fidélisation et proposer des améliorations
+</footer>
+
+<script>
+function toggleCorr(btn) {
+  const corr = btn.nextElementSibling;
+  const isVisible = corr.classList.contains('visible');
+  corr.classList.toggle('visible', !isVisible);
+  btn.textContent = isVisible ? '✅ Voir la correction' : '🔒 Masquer la correction';
+}
+</script>
+
+</body>
+</html>
